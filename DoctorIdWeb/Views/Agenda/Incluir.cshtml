@@ -1,0 +1,97 @@
+﻿@model DoctorIdWeb.Infraestrutura.Models.AgendamentoModel
+
+<form class="ui form segment" id="frmIncluirAgenda">
+    <h4 class="ui dividing header">Novo Agendamento</h4>
+    <input type="hidden" value="@Model.Id" />
+    <div class="two fields">
+        <div class="field">
+            <label>Data do agendamento</label>
+            <h3 class="ui Header">@Model.Data.ToString("dd/MM/yyyy")</h3>
+        </div>
+        <div class="field">
+            <label>Clínica</label>
+            <h3 class="ui Header">@Model.ClinicaNome</h3>
+        </div>
+    </div>
+
+    <h4 class="ui dividing header">Dados  do Paciente</h4>
+    
+    <div class="fields">
+        <div class="three wide field">
+            <label>CPF</label>
+            <input type="text" id="Cpf" name="Cpf" value="@Model.Cpf" placeholder="Ex: 000.000.000-00">
+            <input type="hidden" id="PacienteId" value="@Model.PacienteId" />
+
+        </div>
+        <div class="ten wide field">
+            <label>Nome Completo</label>
+            <input type="text" id="Nome" name="Nome" value="@Model.Nome" placeholder="Nome completo do paciente">
+        </div>
+        <div class="three wide field">
+            <label>Telefone</label>
+            <input type="text" id="Telefone" name="Telefone" value="@Model.Telefone" placeholder="Ex: (99) 9999-9999">
+        </div>
+    </div>
+
+    <div class="field">
+        <label>Nome Completo</label>
+        <input type="text" id="EMail" name="EMail" value="@Model.EMail" placeholder="Endereço de E-Mail">
+    </div>
+
+    <div class="field">
+        <label>Selecione o Convênio, se houver</label>
+        @Html.DropDownList("convenio", (IEnumerable<SelectListItem>)ViewData["SelectConvenios"], "--Selecione--", new { @class = "ui dropdown" })
+    </div>
+
+    <button class="ui green button">Agendar</button>
+</form>
+
+<script>
+
+    $("#Cpf").blur(function () {
+        var value = $("#Cpf").val();
+        if (value.trim() != '') {
+            $("#frmIncluirAgenda").addClass("loading");
+
+            $.get("/Paciente/ConsultaCpf/", { cpf: value })
+                .done(function (response) {
+                    alert(response);
+                    if (response) {
+                        $("#Id").val(response.Id);
+                        $("#Nome").val(response.Nome);
+                        $("#Cpf").val(response.Cpf);
+                        $("#Telefone").val(response.Telefone);
+                        $("#EMail").val(response.EMail);
+                    }
+                })
+                .fail(function (r) {
+                    alert("erro");
+                });
+        }
+
+        $("#frmIncluirAgenda").removeClass("loading");
+    });
+
+    $('form').submit(function (e) {
+        e.preventDefault();
+
+        $.ajax({
+            url: "/Agenda/Salvar/",
+            method: "POST",
+            data: request,
+            error:
+                function (r) {
+                    if (r.status == 400)
+                        alert(`Ocorreu um erro : ${r.responseJSON}`);
+                    else if (r.status == 500)
+                        alert("Ocorreu um erro interno no servidor.");
+                },
+            success:
+                function (response) {
+                    var popUp = $('.ui .modal');
+                    popUp.html(response);
+                    popUp.modal('hide');
+                }
+        }); 
+    });
+</script>

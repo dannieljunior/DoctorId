@@ -1,0 +1,52 @@
+﻿@model DoctorIdWeb.Infraestrutura.Models.ConvenioModel
+
+<form class="ui form segment" id="frmCadastro" action="">
+    <h3 class="ui dividing header">Cadastro de Convênio</h3>
+    <input id="Id" name="Id" type="hidden" value="@Model.Id" />
+    <p id="val"></p>
+    <div class="field">
+        <label>Nome</label>
+        <div class="field">
+            <input type="text" id="Nome" name="Nome" value="@Model.Nome" placeholder="Nome do convênio">
+        </div>
+    </div>
+
+    <button class="ui primary button" type="submit">Salvar</button>
+</form>
+
+<script>
+    $(document).ready(function () {
+        $('form').submit(function (e) {
+            e.preventDefault();
+
+            $.ajax({
+                url: "/Convenio/Salvar/",
+                method: "POST",
+                data: {
+                    "Id": $('#Id').val(),
+                    "Nome": $('#Nome').val(),
+                },
+                error:
+                    function (r) {
+                        if (r.status == 400)
+                            alert(`Ocorreu um erro : ${r.responseJSON}`);
+                        else if (r.status == 500)
+                            alert("Ocorreu um erro interno no servidor.");
+                        $(".ui .modal").modal("hide");
+                        document.location.reload(true);
+                    },
+                success:
+                    function (r) {
+                        if (!r.sucesso)
+                            $("form #val").append('<div class="ui negative message">' + 
+                                                  '<div class="header">Validação</div><p>' + r.mensagens + '</p></div>');
+                        else {
+                            $(".ui .modal").modal("hide");
+                            document.location.reload(true);
+                        }
+                    }
+            });
+        });
+    });
+</script>
+

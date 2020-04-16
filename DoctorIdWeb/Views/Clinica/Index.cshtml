@@ -1,0 +1,68 @@
+﻿@model List<DoctorIdWeb.Infraestrutura.Models.ClinicaModel>
+
+<!-- Clinicas/Index -->
+@{
+    ViewBag.Title = "Clínicas";
+}
+
+@section titulo{
+    <h3 class="ui header blue"><i class="ui hospital icon"></i>Clínicas</h3>
+}
+
+<table class="ui celled table">
+    <thead>
+        <tr>
+            <th style="width:75px;">
+                <button class="ui vertical animated green button" tabindex="0" onclick="Novo();">
+                    <div class="hidden content">Novo</div>
+                    <div class="visible content">
+                        <i class="add icon"></i>
+                    </div>
+                </button>
+            </th>
+            <th>Nome da Clínica</th>
+            <th>Cnpj</th>
+            <th>Telefone</th>
+            <th style="width:150px;">Endereço</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>
+                <button class="ui vertical animated primary button btn-edit" data-id="@item.Id" tabindex="0" );">
+                    <div class="hidden content">Alterar</div>
+                    <div class="visible content">
+                        <i class="pencil icon"></i>
+                    </div>
+                </button>
+            </td>
+            <td><p href="#">@item.Nome</p></td>
+            <td><p href="#">@item.Cnpj</p></td>
+            <td><p href="#">@item.Telefone</p></td>
+            <td><p href="#">@item.Endereco</p></td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+<div class="ui modal"></div>
+
+@section scripts{
+    <script>
+        $('.btn-edit').click(function () {
+            var url = '@Url.Action("Alterar", "Clinica")/' + $(this).attr("data-id");
+            var popUp = $('.ui .modal');
+            popUp.load(url);
+            popUp.modal('show');
+        });
+
+        function Novo() {
+            var url = '@Url.Action("Incluir", "Clinica")';
+            var popUp = $('.ui .modal');
+            popUp.load(url);
+            popUp.modal('show');
+        }
+    </script>    
+}

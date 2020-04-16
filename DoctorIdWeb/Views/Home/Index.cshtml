@@ -1,0 +1,72 @@
+﻿<!-- Home/Index -->
+
+@{
+    ViewBag.Title = "Início";
+    ViewBag.IsHome = true;
+}
+
+<h3 class="ui header"><i class="ui time icon"></i>@DateTime.Now.ToLongDateString() </h3>
+
+<div class="ui three cards">
+    <a class="blue card" href="@Url.Action("Index", "Agenda")">
+        <div class="content">
+            <div class="ui blue header"><i class="ui calendar icon"></i>Agenda</div>
+            <div class="ui horizontal statistics">
+                <div class="statistic">
+                   <h2><marquee>Acessar a agenda</marquee></h2>
+                </div>
+            </div>
+        </div>
+    </a>
+    <a class="green card" href="@Url.Action("Index", "Clinica")">
+        <div class="content">
+            <div class="ui green header"><i class="ui hospital icon"></i>Clínicas</div>
+            <div class="ui horizontal statistics">
+                <div class="statistic">
+                    <div class="value">
+                        @Model.Clinicas
+                    </div>
+                    <div class="label">
+                        Clínicas cadastradas
+                    </div>
+                </div>
+            </div>
+        </div>
+    </a>
+    <a class="orange card" href="@Url.Action("Index", "Convenio")">
+        <div class="content">
+            <div class="ui orange header"><i class="ui payment icon"></i>Convênios</div>
+            <div class="ui horizontal statistics">
+                <div class="statistic">
+                    <div class="value">
+                        @Model.Convenios
+                    </div>
+                    <div class="label">
+                        Convênios
+                    </div>
+                </div>
+            </div>
+        </div>
+    </a>
+
+    <a class="grey card">
+        <div class="content">
+            <div class="ui grey header"><i class="ui users icon"></i>Usuários</div>
+            <div class="ui horizontal statistics">
+                <div class="statistic">
+                    <div class="value">
+                        0
+                    </div>
+                    <div class="label">
+                        Usuários cadastrados
+                    </div>
+                </div>
+            </div>
+        </div>
+    </a>
+
+</div>
+
+@section titulo{
+    <h3 class="ui header blue"><i class="ui home icon"></i>Início</h3>
+}

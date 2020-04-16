@@ -1,0 +1,62 @@
+﻿@model List<DoctorIdWeb.Infraestrutura.Models.ConvenioModel>
+
+<!-- Clinicas/Index -->
+@{
+    ViewBag.Title = "Convênios";
+}
+
+@section titulo{
+    <h3 class="ui header blue"><i class="ui payment icon"></i>Convênios</h3>
+}
+
+<table class="ui celled table">
+    <thead>
+        <tr>
+            <th style="width:75px;">
+                <button class="ui vertical animated green button" tabindex="0" onclick="Novo();">
+                    <div class="hidden content">Novo</div>
+                    <div class="visible content">
+                        <i class="add icon"></i>
+                    </div>
+                </button>
+            </th>
+            <th class="ui header">Nome do Convênio</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <button class="ui vertical animated primary button btn-edit" data-id="@item.Id" tabindex="0");">
+                        <div class="hidden content">Alterar</div>
+                        <div class="visible content">
+                            <i class="pencil icon"></i>
+                        </div>
+                    </button>
+                </td>
+                <td><p href="#" class="ui blue header">@item.Nome</p></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="ui modal"></div>
+
+@section scripts{
+    <script>
+        $('.btn-edit').click(function () {
+            var url = '@Url.Action("Alterar", "Convenio")/' + $(this).attr("data-id");
+            var popUp = $('.ui .modal');
+            popUp.load(url);
+            popUp.modal('show');
+        });
+
+        function Novo() {
+            var url = '@Url.Action("Incluir", "Convenio")';
+            var popUp = $('.ui .modal');
+            popUp.load(url);
+            popUp.modal('show');
+        }
+    </script>    
+}

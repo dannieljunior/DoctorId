@@ -1,0 +1,78 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr", "~/bundles/jquery", 
+                    "~/bundles/semantic", "~/bundles/UI")
+</head>
+<body>
+    <nav>
+        <div class="menu-padrao-pontoId ui menu borderless fixed menu">
+            @{
+                var ambientesDebug = new string[] { "desenvolvimento", "homologacao", };
+                if (ambientesDebug.Any(x => x == System.Configuration.ConfigurationManager.AppSettings["ambiente"]))
+                {
+                    <span class="ui red right corner label">
+                        <i class="bug icon"></i>
+                    </span>
+                }
+            }
+
+            <div class="ui container">
+                <span class="header item">
+                    <img class="ui image" src="~/Content/Images/doctor-logo.png" />
+                </span>
+
+                @{
+                    if (ViewBag.IsHome == null || !ViewBag.IsHome)
+                    {
+                        <span class="item">
+                            <a href="@Url.Action("Index", "Home")" title="Início">
+                                <i class="ui blue big home icon"></i>
+                            </a>
+                        </span>
+                        <span class="item">
+                            <a href="@Url.Action("Index", "Agenda")" title="Início">
+                                <i class="ui blue big calendar icon"></i>
+                            </a>
+                        </span>
+                    }
+                }
+                <div class="right menu">
+                    <div class="item">
+                        <a><i class="user icon"></i>Daniel Jr.</a>
+                    </div>
+                    <div class="item">
+                        <a><i class="logout icon"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <br /><br /><br /><br />
+
+    <section id="header">
+        <p>
+            <div class="ui container">
+                @RenderSection("titulo", required: true)
+            </div>
+            <h1 class="ui divider"></h1>
+        </p>
+    </section>
+    <section>
+        <div class="ui container">
+            @RenderBody()
+        </div>
+    </section>
+    <footer>
+        <p>&copy; @DateTime.Now.Year - Daniel Jr.</p>
+    </footer>
+    @RenderSection("scripts", required: false)
+</body>
+</html>
+

@@ -1,0 +1,46 @@
+﻿@model List<DoctorIdWeb.Infraestrutura.Models.Responses.AgendaDataResponse>
+@using DoctorIdWeb.Helpers;
+
+<h3 class="ui blue header">Agenda da Clínica</h3>
+
+<div class="ui four cards">
+
+    @foreach (var item in Model)
+    {
+        @Html.Card(item.Data, item.Clinica.Id, item.QtdeAgendamentos, item.CanAdicionarAgendamentos, item.IsFimDeSemana);
+    }
+
+</div>
+
+<div class="ui modal"></div>
+
+<script>
+    //poderia criar funções para reparoveitar, mas eu estou sem tempo mesmo! vou copiar e colar, me desculpem!
+
+    $(".btn-novo-agendamento").click(function () {
+        var request = {
+            "Data": $(this).attr("data-DataAgenda"),
+            "ClinicaId": $(this).attr("data-Clinica")
+        }
+
+        $.ajax({
+            url: "/Agenda/Incluir/",
+            method: "POST",
+            data: request,
+            error:
+                function (r) {
+                    if (r.status == 400)
+                        alert(`Ocorreu um erro : ${r.responseJSON}`);
+                    else if (r.status == 500)
+                        alert("Ocorreu um erro interno no servidor.");
+                },
+            success:
+                function (response) {
+                    var popUp = $('.ui .modal');
+                    popUp.html(response);
+                    popUp.modal('show');
+                }
+        });
+    });
+</script>
+

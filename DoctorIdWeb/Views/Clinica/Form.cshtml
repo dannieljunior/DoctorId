@@ -1,0 +1,80 @@
+﻿@model DoctorIdWeb.Infraestrutura.Models.ClinicaModel
+
+<form class="ui form segment" id="frmCadastro" action="">
+    <h3 class="ui dividing header">Cadastro de Clínicas</h3>
+    <input id="Id" name="Id" type="hidden" value="@Model.Id" />
+    <p id="val"></p>
+    <div class="field">
+        <div class="field">
+            <label>Nome</label>
+            <input type="text" id="Nome" name="Nome" value="@Model.Nome" placeholder="Informe o nome da clínica">
+        </div>
+    </div>
+
+    <div class="two fields">
+        <div class="field">
+            <label>Cnpj</label>
+            <input pattern="\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}" required="required" type="text" id="Cnpj" name="Cnpj" value="@Model.Cnpj" placeholder="Ex: 00.000.000/0000-00">
+        </div>
+        <div class="field">
+            <label>Telefone</label>
+            <input type="text" id="Telefone" name="Telefone" value="@Model.Telefone" placeholder="Telefone">
+        </div>
+    </div>
+
+    <div class="field">
+        <div class="field">
+            <label>Nome</label>
+            <textarea id="Endereco" placeholder="Endereço da clínica" name="message" rows="5" cols="40">@Model.Endereco</textarea>
+        </div>
+    </div>
+
+    <button class="ui primary button" type="submit">Salvar</button>
+</form>
+
+<script>
+    $(document).ready(function () {
+        $('form').submit(function (e) {
+            e.preventDefault();
+
+            $.ajax({
+                url: "/Clinica/Salvar/",
+                method: "POST",
+                data: {
+                    "Id": $('#Id').val(),
+                    "Nome": $('#Nome').val(),
+                    "Cnpj": $('#Cnpj').val(),
+                    "Telefone": $('#Telefone').val(),
+                    "Endereco": $('#Endereco').val()
+                },
+                error:
+                    function (r) {
+                        if (r.status == 400)
+                            alert(`Ocorreu um erro : ${r.responseJSON}`);
+                        else if (r.status == 500)
+                            alert("Ocorreu um erro interno no servidor.");
+                        $(".ui .modal").modal("hide");
+                        document.location.reload(true);
+                    },
+                success:
+                    function (r) {
+                        if (!r.sucesso)
+                            $("form #val").append('<div class="ui negative message">' +
+                                '<div class="header">Validação</div><p>' + r.mensagens + '</p></div>');
+                        else {
+                            $(".ui .modal").modal("hide");
+                            document.location.reload(true);
+                        }
+                    }
+            });
+        });
+    });
+
+    $('.btn-edit').click(function () {
+        var url = '@Url.Action("Alterar", "Clinica")/' + $(this).attr("data-id");
+        var popUp = $('.ui .modal');
+        popUp.load(url);
+        popUp.modal('show');
+    });
+</script>
+

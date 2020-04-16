@@ -1,0 +1,96 @@
+﻿<!-- Agenda/Index -->
+
+@{
+    ViewBag.Title = "Agenda";
+}
+
+@section titulo{
+    <h3 class="ui header blue"><i class="ui calendar icon"></i>Agenda</h3>
+   
+            <div class="ui form">
+                <div class="fields">
+                    <div class="field">
+                        <label>Data Inicial</label>
+                        <div class="ui icon input">
+                            <input type="text" autocomplete="off" id="DtaInicio">
+                            <i class="ui calendar icon"></i>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>Data Final</label>
+                        <div class="ui icon input">
+                            <input type="text" autocomplete="off" id="DtaFinal">
+                            <i class="ui calendar icon"></i>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <!-- Eu tenho várias opções para fazer isso, vou fazer assim, por falta de tempo -->
+                        <label>Clínica</label>
+                        @Html.DropDownList("clinica", (IEnumerable<SelectListItem>)ViewData["SelectClinicas"], "--Selecione--", new { @class = "ui dropdown" })
+                    </div>
+                    <button id="btn-consulta" class="ui icon button"><i class="ui search icon"></i>Consulta</button>
+                </div>
+            </div>        
+            
+}
+
+<div id="dv-lista"></div>
+
+<script type="text/javascript">
+    /* Considerações: 1. Eu poderia ter carregado o js da linguagem
+    /* 2. Não estou com tempo para estulizar o calendário. Não vou usar css da internet. */
+
+    var config = {
+        dateFormat: 'dd/mm/yy',
+        dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+        dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S', 'D'],
+        dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+        monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+        monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+        nextText: 'Proximo',
+        prevText: 'Anterior',
+        showOtherMonths: true,
+        selectOtherMonths: true,
+        changeMonth: true,
+        changeYear: true
+    }
+
+    $("#DtaInicio").datepicker(config);
+    $("#DtaFinal").datepicker(config);
+
+    $("#btn-consulta").click(function () {
+        var request = {
+            "Clinica": $("#clinica option:selected").val(),
+            "DtaInicio": $('#DtaInicio').val(),
+            "DtaFinal": $('#DtaFinal').val(),
+        }
+
+        if (request.Clinica == "")
+        {
+            alert("Selecione uma Clínica");
+            return;
+        }  
+
+        $.ajax({
+            url: "/Agenda/Index",
+            method: "POST",
+            data: request,
+            error:
+                function (r) {
+                    if (r.status == 400)
+                        alert(`Ocorreu um erro : ${r.responseJSON}`);
+                    else if (r.status == 500)
+                        alert("Ocorreu um erro interno no servidor.");
+                },
+            success:
+                function (response) {
+                    $("#dv-lista").html(response);
+                }
+        });
+    });
+
+    
+
+
+</script>
